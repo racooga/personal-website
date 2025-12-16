@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Racooga - Digital Artist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- Reset & Variables --- */
+        :root {
+            --bg-color: #0d0d0d;
+            --card-bg: #161616;
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --accent: #8a2be2; /* BlueViolet */
+            --accent-glow: rgba(138, 43, 226, 0.4);
+            --border: #333;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 8px;
+            --transition-speed: 0.3s;
+            --font-main: 'Outfit', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* --- Layout --- */
+        .wrapper {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* PC Layout: Split View */
+        @media (min-width: 900px) {
+            .wrapper {
+                flex-direction: row;
+                align-items: flex-start;
+                padding-top: 5vh;
+                height: 90vh; /* Fix height for cleaner split view feel */
+            }
+            
+            .profile-sidebar {
+                width: 350px;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .main-content {
+                flex-grow: 1;
+                max-width: 800px;
+                height: 100%;
+                overflow: hidden; /* Internal scrolling */
+                position: relative;
+                background: var(--card-bg);
+                border-radius: var(--radius-lg);
+                border: 1px solid var(--border);
+            }
+        }
+        
+        /* Mobile Layout tweaks */
+        @media (max-width: 899px) {
+            .main-content {
+                min-height: 500px; /* Ensure space for content */
+                background: var(--card-bg);
+                border-radius: var(--radius-lg);
+                border: 1px solid var(--border);
+                overflow: hidden;
+                position: relative;
+            }
+        }
+
+        /* --- Components: Sidebar --- */
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%; /* Fill sidebar height on PC */
+            justify-content: center;
+        }
+
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+            margin-bottom: 20px;
+            transition: transform 0.5s ease;
+        }
+        .avatar:hover { transform: scale(1.05) rotate(5deg); }
+
+        .name {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .tagline { color: var(--accent); font-weight: 600; letter-spacing: 1px; margin-bottom: 15px; }
+        .bio { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 25px; }
+
+        /* --- Components: Views System --- */
+        .view-section {
+            display: none; /* Hidden by default */
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .view-section.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .scroll-content {
+            padding: 30px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        
+        /* Custom Scrollbar */
+        .scroll-content::-webkit-scrollbar { width: 8px; }
+        .scroll-content::-webkit-scrollbar-track { background: transparent; }
+        .scroll-content::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        .scroll-content::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* --- Components: Main Menu --- */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            padding: 30px;
+            height: 100%;
+            align-content: center;
+        }
+
+        @media (min-width: 600px) {
+            .menu-grid {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
+        }
+
+        .menu-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 30px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 10px;
+            color: var(--text-main);
+            text-decoration: none;
+            /* Button reset */
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .menu-card:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        
+        .menu-card:hover h3, .menu-card:hover p, .menu-card:hover i {
+            color: #fff;
+        }
+
+        .menu-card h3 { font-size: 1.5rem; font-weight: 800; }
+        .menu-card p { color: var(--text-muted); font-size: 0.9rem; transition: color 0.3s; }
+        .icon-large { font-size: 2rem; color: var(--accent); margin-bottom: 10px; transition: color 0.3s; }
+        .menu-card:hover .icon-large { color: white; }
+
+        /* --- Components: Top Navigation Bar --- */
+        .top-bar {
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+            padding: 5px;
+        }
+        .back-btn:hover { color: white; transform: translateX(-3px); }
+
+        .breadcrumbs {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        .breadcrumbs i { font-size: 0.7rem; opacity: 0.5; }
+
+        /* --- Section Content Styling --- */
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .price-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
+        .price-table th, .price-table td { text-align: left; padding: 12px; border-bottom: 1px solid #333; }
+        .price-table th { color: var(--accent); }
+
+        .mini-samples { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
+        .mini-samples img { width: 80px; height: 80px; border-radius: var(--radius-sm); object-fit: cover; }
+
+        .btn-glow {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 0 15px var(--accent-glow);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn-glow:hover { background: #9d4edd; box-shadow: 0 0 25px var(--accent-glow); transform: translateY(-2px); }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+        }
+        @media (min-width: 600px) { .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 15px; } }
+
+        .gallery-item {
+            width: 100%; aspect-ratio: 1/1; object-fit: cover;
+            border-radius: var(--radius-sm); transition: transform 0.3s, filter 0.3s; cursor: zoom-in; background: #222;
+        }
+        .gallery-item:hover { transform: scale(1.03); z-index: 2; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+
+        .links-grid { display: flex; flex-direction: column; gap: 10px; }
+        .social-link {
+            display: flex; align-items: center; padding: 16px; background: rgba(255,255,255,0.05);
+            border-radius: var(--radius-md); text-decoration: none; color: white; font-weight: 500;
+            transition: all 0.3s; border: 1px solid transparent;
+        }
+        .social-link:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); transform: translateX(5px); }
+        .social-link i { margin-right: 15px; font-size: 1.2rem; width: 24px; text-align: center; }
+
+        .copy-block {
+            background: #1a1a1a; border: 1px dashed #555; padding: 15px; border-radius: var(--radius-md);
+            display: flex; justify-content: space-between; align-items: center; margin-top: 10px;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .copy-block:active { background: #252525; }
+        .copy-feedback { font-size: 0.8rem; color: #2ecc71; opacity: 0; transition: opacity 0.3s; }
+
+        /* Modal */
+        .modal {
+            display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); justify-content: center; align-items: center; flex-direction: column;
+            backdrop-filter: blur(5px); animation: fadeIn 0.3s;
+        }
+        .modal img { max-width: 90%; max-height: 85%; border-radius: var(--radius-sm); box-shadow: 0 0 30px rgba(138,43,226,0.2); }
+        .close-modal { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
+
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar / Identity -->
+        <aside class="profile-sidebar">
+            <div class="profile-card">
+                <img src="neogirl.jpg" alt="Racooga Avatar" class="avatar">
+                <h1 class="name">Racooga</h1>
+                <p class="tagline">Digital Artist & Illustrator</p>
+                <p class="bio">Turning imagination into pixels. Specializing in character design and conceptual art.</p>
+                
+                <a href="#" class="btn-glow" onclick="navigateTo('view-order')" style="width:80%;">
+                    Commission Me
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content (Dynamic Window) -->
+        <main class="main-content" id="main-window">
+            
+            <!-- View: Main Menu -->
+            <div id="view-menu" class="view-section active">
+                <div class="menu-grid">
+                    <button class="menu-card" onclick="navigateTo('view-commission')">
+                        <i class="fa-solid fa-file-invoice-dollar icon-large"></i>
+                        <h3>Commission Info</h3>
+                        <p>Prices, Terms, and Process</p>
+                    </button>
+
+                    <button class="menu-card" onclick="navigateTo('view-samples')">
+                        <i class="fa-solid fa-palette icon-large"></i>
+                        <h3>Samples</h3>
+                        <p>Gallery of selected works</p>
+                    </button>
+
+                    <button class="menu-card" onclick="navigateTo('view-links')">
+                        <i class="fa-solid fa-link icon-large"></i>
+                        <h3>Links</h3>
+                        <p>Social media & Contacts</p>
+                    </button>
+
+                    <button class="menu-card" onclick="navigateTo('view-order')">
+                        <i class="fa-solid fa-pen-nib icon-large"></i>
+                        <h3>Order</h3>
+                        <p>Start a commission request</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- View: Commission Info -->
+            <div id="view-commission" class="view-section">
+                <div class="top-bar">
+                    <button class="back-btn" onclick="goBack()">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div class="breadcrumbs">menu <i class="fa-solid fa-chevron-right"></i> commission info</div>
+                </div>
+                
+                <div class="scroll-content">
+                    <h2 class="section-title">Commission Info</h2>
+                    
+                    <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; margin-bottom:20px;">
+                        <span style="color:#777; margin-right:10px;">Quick Jump:</span>
+                        <a href="#headshot" style="color:var(--accent); text-decoration:none;">Pricing</a>
+                    </div>
+
+                    <h3 id="headshot">Pricing</h3>
+                    <table class="price-table">
+                        <tr>
+                            <th>Type</th>
+                            <th>Price (Start)</th>
+                        </tr>
+                        <tr>
+                            <td>Headshot / Icon</td>
+                            <td>$40</td>
+                        </tr>
+                        <tr>
+                            <td>Half Body</td>
+                            <td>$75</td>
+                        </tr>
+                        <tr>
+                            <td>Full Body</td>
+                            <td>$120</td>
+                        </tr>
+                    </table>
+
+                    <h4 style="margin-top:30px; margin-bottom:10px;">Style Samples</h4>
+                    <div class="mini-samples">
+                        <img src="girlart2.jpg" alt="Sample 1">
+                        <img src="boyart1.jpg" alt="Sample 2">
+                        <img src="helixel.jpg" alt="Sample 3">
+                    </div>
+
+                    <button class="btn-glow" style="background: #333; margin-top: 15px; width:100%;" onclick="navigateTo('view-samples')">
+                        See Full Gallery
+                    </button>
+                </div>
+            </div>
+
+            <!-- View: Samples (Gallery) -->
+            <div id="view-samples" class="view-section">
+                <div class="top-bar">
+                    <button class="back-btn" onclick="goBack()">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div class="breadcrumbs">menu <i class="fa-solid fa-chevron-right"></i> samples</div>
+                </div>
+
+                <div class="scroll-content">
+                    <h2 class="section-title">Samples Gallery</h2>
+                    <p style="color:#aaa; font-size:0.9rem; margin-bottom:15px;">Click on an image to view full size.</p>
+                    
+                    <div class="gallery-grid">
+                        <img src="bar.jpg" class="gallery-item" alt="Artwork">
+                        <img src="boyart1.jpg" class="gallery-item" alt="Artwork">
+                        <img src="girlart2.jpg" class="gallery-item" alt="Artwork">
+                        <img src="halloween.jpg" class="gallery-item" alt="Artwork">
+                        <img src="helixel.jpg" class="gallery-item" alt="Artwork">
+                        <img src="neogirl.jpg" class="gallery-item" alt="Artwork">
+                        <img src="newyearboy.jpg" class="gallery-item" alt="Artwork">
+                        <img src="newyeargirl.jpg" class="gallery-item" alt="Artwork">
+                        <img src="riskydingo.jpg" class="gallery-item" alt="Artwork">
+                        <img src="slime.jpg" class="gallery-item" alt="Artwork">
+                    </div>
+                </div>
+            </div>
+
+            <!-- View: Links -->
+            <div id="view-links" class="view-section">
+                <div class="top-bar">
+                    <button class="back-btn" onclick="goBack()">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div class="breadcrumbs">menu <i class="fa-solid fa-chevron-right"></i> links</div>
+                </div>
+
+                <div class="scroll-content">
+                     <h2 class="section-title">Social Links</h2>
+                    <div class="links-grid">
+                        <a href="https://www.deviantart.com/racooga" target="_blank" class="social-link" style="border-left: 4px solid #05cc47;">
+                            <i class="fa-brands fa-deviantart"></i> DeviantArt
+                        </a>
+                        <a href="https://x.com/rAcoogA" target="_blank" class="social-link" style="border-left: 4px solid #fff;">
+                            <i class="fa-brands fa-x-twitter"></i> Twitter / X
+                        </a>
+                        <a href="https://youtube.com/@racooga" target="_blank" class="social-link" style="border-left: 4px solid #ff0000;">
+                            <i class="fa-brands fa-youtube"></i> YouTube
+                        </a>
+                        <a href="https://t.me/rAcoogAaAa" target="_blank" class="social-link" style="border-left: 4px solid #0088cc;">
+                            <i class="fa-brands fa-telegram"></i> Telegram Channel
+                        </a>
+                    </div>
+
+                    <div class="copy-block" onclick="copyDiscord()">
+                        <div>
+                            <i class="fa-brands fa-discord" style="color: #7289da; margin-right:8px;"></i>
+                            <span style="font-weight:bold;">racooga</span>
+                        </div>
+                        <div style="font-size:0.8rem; color:#888;">Tap to Copy <span class="copy-feedback" id="discord-feedback">Copied!</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View: Order -->
+            <div id="view-order" class="view-section">
+                <div class="top-bar">
+                    <button class="back-btn" onclick="goBack()">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div class="breadcrumbs">menu <i class="fa-solid fa-chevron-right"></i> order</div>
+                </div>
+
+                <div class="scroll-content">
+                    <h2 class="section-title">Order a Commission</h2>
+                    <p style="margin-bottom:20px;">
+                        Ready to bring your character to life? The best way to reach me for a commission is via Telegram or Discord.
+                        Please include your references and a brief description of what you need.
+                    </p>
+                    
+                    <a href="https://t.me/rAcoogAaAa" target="_blank" class="btn-glow">
+                        <i class="fa-brands fa-telegram"></i> Message on Telegram
+                    </a>
+                    
+                    <div style="margin-top:25px; padding: 20px; background: rgba(255,255,255,0.03); border-radius: var(--radius-sm);">
+                        <h4 style="margin-bottom:10px;">Terms of Service (Short)</h4>
+                        <ul style="padding-left:20px; font-size:0.9rem; color:var(--text-muted);">
+                            <li>Payment upfront via PayPal/Boosty.</li>
+                            <li>No refunds after sketch approval.</li>
+                            <li>Personal use only unless discussed.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="modal" id="imageModal">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <img id="modalImg" src="" alt="Full view">
+    </div>
+
+    <script>
+        // --- Navigation Logic ---
+        
+        function navigateTo(viewId) {
+            // Hide all active sections
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Show target section
+            document.getElementById(viewId).classList.add('active');
+            
+            // Scroll to top of inner content (unnecessary if changing views but good practice)
+            // But we actually need to reset the scroll position of the .scroll-content inside the new view?
+            // Since new view was hidden, it might retain scroll.
+            // Let's find the .scroll-content in the new view
+            const newView = document.getElementById(viewId);
+            const content = newView.querySelector('.scroll-content');
+            if(content) content.scrollTop = 0;
+        }
+
+        function goBack() {
+           navigateTo('view-menu');
+        }
+
+        // --- Features ---
+
+        // Copy Discord ID
+        function copyDiscord() {
+            navigator.clipboard.writeText("racooga").then(() => {
+                const feedback = document.getElementById('discord-feedback');
+                feedback.style.opacity = '1';
+                setTimeout(() => {
+                    feedback.style.opacity = '0';
+                }, 2000);
+            });
+        }
+
+        // Image Gallery Modal
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+
+        galleryItems.forEach(item => {
+            item.addEventListener('click', function() {
+                modal.style.display = 'flex';
+                modalImg.src = this.src;
+            });
+        });
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
