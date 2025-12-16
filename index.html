@@ -13,11 +13,11 @@
         /* --- Reset & Variables --- */
         :root {
             --bg-color: #0d0d0d;
-            --card-bg: rgba(22, 22, 22, 0.65); /* Increased transparency */
+            --card-bg: rgba(22, 22, 22, 0.75); /* Darker for better contrast */
             --card-border: rgba(255, 255, 255, 0.1);
             --text-main: #f0f0f0;
             --text-muted: #d0d0d0;
-            --accent: #9d4edd; /* Slightly lighter purple for better contrast on glass */
+            --accent: #9d4edd;
             --accent-glow: rgba(157, 78, 221, 0.5);
             --radius-lg: 24px;
             --radius-md: 16px;
@@ -29,7 +29,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            background: url('background.jpg') no-repeat center center fixed;
+            background: url('images/background.jpg') no-repeat center center fixed;
             background-size: cover;
             color: var(--text-main);
             font-family: var(--font-main);
@@ -41,15 +41,14 @@
             padding: 20px;
         }
         
-        /* Dark overlay for better readability if background is bright */
         body::before {
             content: '';
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5); /* Darker overlay */
             z-index: -1;
-            backdrop-filter: blur(8px); /* Blur the background image */
+            backdrop-filter: blur(8px);
         }
 
         /* --- Layout --- */
@@ -71,9 +70,9 @@
             }
             
             .profile-sidebar {
-                width: 350px;
+                width: 350px; /* Fixed width */
                 height: 100%;
-                flex-shrink: 0; /* Prevent shrinking */
+                flex-shrink: 0;
                 display: flex;
                 flex-direction: column;
             }
@@ -91,10 +90,9 @@
             }
         }
         
-        /* Mobile Layout tweaks */
         @media (max-width: 899px) {
             .main-content {
-                min-height: 500px;
+                min-height: 600px;
                 background: var(--card-bg);
                 backdrop-filter: blur(15px);
                 border-radius: var(--radius-lg);
@@ -109,7 +107,7 @@
             background: var(--card-bg);
             backdrop-filter: blur(15px);
             border-radius: var(--radius-lg);
-            padding: 40px;
+            padding: 40px 20px; /* Reduced side padding to fit content better if needed */
             text-align: center;
             border: 1px solid var(--card-border);
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
@@ -121,16 +119,16 @@
         }
 
         .avatar {
-            width: 140px;
-            height: 140px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid var(--accent);
-            box-shadow: 0 0 20px var(--accent-glow);
-            margin-bottom: 20px;
+            border: 4px solid var(--accent);
+            box-shadow: 0 0 25px var(--accent-glow);
+            margin-bottom: 25px;
             transition: transform 0.5s ease;
         }
-        .avatar:hover { transform: scale(1.05) rotate(5deg); }
+        .avatar:hover { transform: scale(1.05) rotate(3deg); }
 
         .name {
             font-size: 2.5rem;
@@ -154,18 +152,20 @@
             text-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
         }
 
-        /* Social Icons Row */
+        /* Social Icons: Sidebar */
         .social-row {
             display: flex;
-            gap: 15px;
+            gap: 10px; /* Reduced gap to fit */
             justify-content: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap; /* Force single row */
             margin-top: 10px;
+            width: 100%;
         }
         
         .social-btn {
-            width: 45px;
-            height: 45px;
+            width: 42px; /* Slightly smaller to ensure fit */
+            height: 42px;
+            flex-shrink: 0;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             display: flex;
@@ -178,9 +178,9 @@
         }
         
         .social-btn img {
-            width: 24px;
-            height: 24px;
-            filter: invert(1); /* Make black SVGs white */
+            width: 22px;
+            height: 22px;
+            filter: invert(1);
             transition: transform 0.3s ease;
         }
         
@@ -190,11 +190,9 @@
             box-shadow: 0 5px 15px var(--accent-glow);
         }
         
-        .social-btn:hover img {
-            transform: scale(1.1);
-        }
+        .social-btn:hover img { transform: scale(1.1); }
 
-        /* --- Components: Views System --- */
+        /* --- Components: Views --- */
         .view-section {
             display: none;
             width: 100%;
@@ -216,61 +214,115 @@
             flex-grow: 1;
         }
         
-        /* Custom Scrollbar */
         .scroll-content::-webkit-scrollbar { width: 8px; }
         .scroll-content::-webkit-scrollbar-track { background: transparent; }
         .scroll-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
         .scroll-content::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
 
-        /* --- Components: Main Menu --- */
+        /* --- Components: Main Menu (Updated) --- */
         .menu-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 15px;
-            padding: 30px;
+            grid-template-rows: auto auto; /* 2 main rows */
+            gap: 20px;
+            padding: 40px;
             height: 100%;
             align-content: center;
         }
 
         @media (min-width: 600px) {
             .menu-grid {
-                grid-template-columns: 1fr 1fr;
-                grid-template-rows: 1fr 1fr;
+                grid-template-columns: 1fr 1fr 1fr; /* 3 Columns */
             }
         }
 
         .menu-card {
-            background: rgba(255,255,255,0.05); /* slightly lighter for glass */
+            background: rgba(255,255,255,0.05);
             border: 1px solid var(--card-border);
             border-radius: var(--radius-md);
-            padding: 30px;
+            padding: 25px;
             text-align: left;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 10px;
+            justify-content: space-between; /* Ensure content spreads */
             color: var(--text-main);
             text-decoration: none;
             font-family: inherit;
-            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            min-height: 160px; /* Ensure minimum height for buttons */
         }
 
         .menu-card:hover {
-            background: var(--accent);
             border-color: var(--accent);
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: rgba(255,255,255,0.08);
         }
         
-        .menu-card:hover h3, .menu-card:hover p, .menu-card:hover i { color: #fff; }
+        /* Specific Card Styles */
+        .card-samples {
+            grid-column: 1 / -1; /* Span 3 columns (Full width) */
+            height: 280px; /* Featured height */
+            padding: 0;
+            background: #000;
+        }
+        
+        /* Carousel inside Samples Card */
+        .carousel-wrapper {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+        .card-samples:hover .carousel-wrapper { opacity: 0.4; }
 
-        .menu-card h3 { font-size: 1.5rem; font-weight: 800; }
-        .menu-card p { color: var(--text-muted); font-size: 0.9rem; transition: color 0.3s; }
-        .icon-large { font-size: 2rem; color: var(--accent); margin-bottom: 10px; transition: color 0.3s; }
-        .menu-card:hover .icon-large { color: white; }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth step transition */
+        }
+        
+        .carousel-track img {
+            height: 280px;
+            width: auto; /* Let width maintain aspect ratio, we'll handle sticking via JS centering or just simple flow */
+            object-fit: cover;
+            flex-shrink: 0;
+            filter: grayscale(0.2);
+            transition: filter 0.3s;
+        }
+
+        .samples-overlay {
+            position: absolute;
+            z-index: 2;
+            bottom: 30px;
+            left: 30px;
+            pointer-events: none;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.9);
+        }
+        
+        .samples-overlay h3 { font-size: 3rem; font-weight: 800; color: white; margin-bottom: 5px; }
+        .samples-overlay p { font-size: 1.2rem; color: #ddd; }
+        .samples-overlay .cta { 
+            display: inline-block; margin-top: 15px; 
+            background: var(--accent); padding: 8px 20px; border-radius: 30px; 
+            font-size: 1rem; font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        /* Bottom Row Cards */
+        .card-small {
+            grid-column: span 1; /* 1/3 width each on desktop */
+        }
+        
+        .menu-card h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 5px; }
+        .menu-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.3; }
+        .icon-large { font-size: 2rem; color: var(--accent); margin-bottom: 15px; }
+        .menu-card:hover .icon-large { color: white; filter: drop-shadow(0 0 5px var(--accent)); }
 
         /* --- Components: Top Navigation Bar --- */
         .top-bar {
@@ -305,15 +357,35 @@
             font-weight: 600;
         }
         
-        .clickable-crumb {
-            cursor: pointer;
-            transition: color 0.2s;
-        }
+        .clickable-crumb { cursor: pointer; transition: color 0.2s; }
         .clickable-crumb:hover { color: white; text-decoration: underline; }
-        
         .breadcrumbs i { font-size: 0.7rem; opacity: 0.5; }
 
-        /* --- Section Content Styling --- */
+        /* --- Masonry Gallery --- */
+        .gallery-masonry {
+            column-count: 2;
+            column-gap: 15px;
+        }
+        @media (min-width: 600px) { .gallery-masonry { column-count: 3; } }
+
+        .gallery-item {
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 15px;
+            border-radius: var(--radius-sm);
+            background: #222;
+            cursor: zoom-in;
+            transition: transform 0.3s ease, filter 0.3s ease;
+            height: auto; 
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        /* --- Global Elements --- */
         .section-title {
             font-size: 2rem;
             margin-bottom: 20px;
@@ -321,43 +393,17 @@
             display: inline-block;
             padding-bottom: 5px;
         }
-
         .price-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
         .price-table th, .price-table td { text-align: left; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .price-table th { color: var(--accent); }
-
         .mini-samples { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
         .mini-samples img { width: 80px; height: 80px; border-radius: var(--radius-sm); object-fit: cover; }
-
         .btn-glow {
-            display: inline-block;
-            background: var(--accent);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            box-shadow: 0 0 15px var(--accent-glow);
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            text-align: center;
+            display: inline-block; background: var(--accent); color: white; padding: 12px 24px;
+            border-radius: 50px; text-decoration: none; font-weight: 600; box-shadow: 0 0 15px var(--accent-glow);
+            transition: all 0.3s ease; border: none; cursor: pointer; text-align: center;
         }
         .btn-glow:hover { background: #be75ff; box-shadow: 0 0 25px var(--accent-glow); transform: translateY(-2px); }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px;
-        }
-        @media (min-width: 600px) { .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 15px; } }
-
-        .gallery-item {
-            width: 100%; aspect-ratio: 1/1; object-fit: cover;
-            border-radius: var(--radius-sm); transition: transform 0.3s, filter 0.3s; cursor: zoom-in; background: #222;
-        }
-        .gallery-item:hover { transform: scale(1.03); z-index: 2; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-
         .links-grid { display: flex; flex-direction: column; gap: 10px; }
         .social-link {
             display: flex; align-items: center; padding: 16px; background: rgba(255,255,255,0.05);
@@ -365,8 +411,6 @@
             transition: all 0.3s; border: 1px solid transparent;
         }
         .social-link:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); transform: translateX(5px); }
-        .social-link i { margin-right: 15px; font-size: 1.2rem; width: 24px; text-align: center; }
-
         .copy-block {
             background: rgba(0,0,0,0.3); border: 1px dashed #777; padding: 15px; border-radius: var(--radius-md);
             display: flex; justify-content: space-between; align-items: center; margin-top: 10px;
@@ -392,7 +436,7 @@
         <!-- Sidebar / Identity -->
         <aside class="profile-sidebar">
             <div class="profile-card">
-                <img src="neogirl.jpg" alt="Racooga Avatar" class="avatar">
+                <img src="images/neogirl.jpg" alt="Racooga Avatar" class="avatar">
                 <h1 class="name">Racooga</h1>
                 <p class="tagline">Illustrator ✦ Character Designer</p>
                 <p class="bio">Turning imagination and tears into pixels.</p>
@@ -401,19 +445,19 @@
                 
                 <div class="social-row">
                     <a class="social-btn" href="https://www.deviantart.com/racooga" target="_blank" title="DeviantArt">
-                        <img src="SVG/devianart.svg" alt="DeviantArt">
+                        <img src="images/SVG/devianart.svg" alt="DeviantArt">
                     </a>
                     <a class="social-btn" href="https://x.com/rAcoogA" target="_blank" title="Twitter / X">
-                        <img src="SVG/twitter-alt-square.svg" alt="Twitter">
+                        <img src="images/SVG/twitter-alt-square.svg" alt="Twitter">
                     </a>
                     <a class="social-btn" href="https://youtube.com/@racooga" target="_blank" title="YouTube">
-                        <img src="SVG/youtube.svg" alt="YouTube">
+                        <img src="images/SVG/youtube.svg" alt="YouTube">
                     </a>
                     <a class="social-btn" href="https://t.me/rAcoogAaAa" target="_blank" title="Telegram">
-                        <img src="SVG/telegram.svg" alt="Telegram">
+                        <img src="images/SVG/telegram.svg" alt="Telegram">
                     </a>
                     <div class="social-btn" onclick="copyDiscord()" title="Copy Discord ID: racooga">
-                        <img src="SVG/discord.svg" alt="Discord">
+                        <img src="images/SVG/discord.svg" alt="Discord">
                     </div>
                 </div>
                 <div id="discord-feedback-sidebar" style="height:20px; color:#2ecc71; font-size:0.8rem; margin-top:5px; opacity:0; transition:opacity 0.3s;">Copied!</div>
@@ -426,29 +470,57 @@
             <!-- View: Main Menu -->
             <div id="view-menu" class="view-section active">
                 <div class="menu-grid">
-                    <button class="menu-card" onclick="navigateTo('view-commission')">
-                        <i class="fa-solid fa-file-invoice-dollar icon-large"></i>
-                        <h3>Commission Info</h3>
-                        <p>Prices, Terms, and Process</p>
+                    
+                    <!-- 1. Samples (Big Featured with Carousel) -->
+                    <div class="menu-card card-samples" onclick="navigateTo('view-samples')" title="View Samples">
+                        <!-- Carousel JS Target -->
+                        <div class="carousel-wrapper">
+                            <div class="carousel-track" id="carouselTrack">
+                                <!-- Images injected via JS or static list -->
+                                <img src="images/bar.jpg"> 
+                                <img src="images/boyart1.jpg"> 
+                                <img src="images/girlart2.jpg"> 
+                                <img src="images/helixel.jpg"> 
+                                <img src="images/neogirl.jpg"> 
+                                <img src="images/riskydingo.jpg"> 
+                                <img src="images/slime.jpg">
+                            </div>
+                        </div>
+                        
+                        <div class="samples-overlay">
+                            <h3>Samples</h3>
+                            <p>Explore the gallery</p>
+                            <span class="cta">View All <i class="fa-solid fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- 2. Commission (1/3) -->
+                    <button class="menu-card card-small" onclick="navigateTo('view-commission')">
+                        <div style="flex-grow:1;">
+                            <i class="fa-solid fa-file-invoice-dollar icon-large"></i>
+                            <h3>Commission</h3>
+                            <p>Prices & Terms</p>
+                        </div>
                     </button>
 
-                    <button class="menu-card" onclick="navigateTo('view-samples')">
-                        <i class="fa-solid fa-palette icon-large"></i>
-                        <h3>Samples</h3>
-                        <p>Gallery of selected works</p>
+                    <!-- 3. Links (1/3) -->
+                    <button class="menu-card card-small" onclick="navigateTo('view-links')">
+                        <div style="flex-grow:1;">
+                            <i class="fa-solid fa-link icon-large"></i>
+                            <h3>Links</h3>
+                            <p>Socials & Contact</p>
+                        </div>
                     </button>
 
-                    <button class="menu-card" onclick="navigateTo('view-links')">
-                        <i class="fa-solid fa-link icon-large"></i>
-                        <h3>Links</h3>
-                        <p>Social media & Contacts</p>
+                    <!-- 4. Order (1/3) -->
+                    <button class="menu-card card-small" onclick="navigateTo('view-order')">
+                         <div style="flex-grow:1;">
+                            <i class="fa-solid fa-pen-nib icon-large"></i>
+                            <h3>Order</h3>
+                            <p>Request Form</p>
+                        </div>
                     </button>
-
-                    <button class="menu-card" onclick="navigateTo('view-order')">
-                        <i class="fa-solid fa-pen-nib icon-large"></i>
-                        <h3>Order</h3>
-                        <p>Start a commission request</p>
-                    </button>
+                    
                 </div>
             </div>
 
@@ -495,9 +567,9 @@
 
                     <h4 style="margin-top:30px; margin-bottom:10px;">Style Samples</h4>
                     <div class="mini-samples">
-                        <img src="girlart2.jpg" alt="Sample 1">
-                        <img src="boyart1.jpg" alt="Sample 2">
-                        <img src="helixel.jpg" alt="Sample 3">
+                        <img src="images/girlart2.jpg" alt="Sample 1">
+                        <img src="images/boyart1.jpg" alt="Sample 2">
+                        <img src="images/helixel.jpg" alt="Sample 3">
                     </div>
 
                     <button class="btn-glow" style="background: rgba(255,255,255,0.1); margin-top: 15px; width:100%;" onclick="navigateTo('view-samples')">
@@ -523,17 +595,18 @@
                     <h2 class="section-title">Samples Gallery</h2>
                     <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:15px;">Click on an image to view full size.</p>
                     
-                    <div class="gallery-grid">
-                        <img src="bar.jpg" class="gallery-item" alt="Artwork">
-                        <img src="boyart1.jpg" class="gallery-item" alt="Artwork">
-                        <img src="girlart2.jpg" class="gallery-item" alt="Artwork">
-                        <img src="halloween.jpg" class="gallery-item" alt="Artwork">
-                        <img src="helixel.jpg" class="gallery-item" alt="Artwork">
-                        <img src="neogirl.jpg" class="gallery-item" alt="Artwork">
-                        <img src="newyearboy.jpg" class="gallery-item" alt="Artwork">
-                        <img src="newyeargirl.jpg" class="gallery-item" alt="Artwork">
-                        <img src="riskydingo.jpg" class="gallery-item" alt="Artwork">
-                        <img src="slime.jpg" class="gallery-item" alt="Artwork">
+                    <!-- Masonry Layout Container -->
+                    <div class="gallery-masonry">
+                        <img src="images/bar.jpg" class="gallery-item" alt="Artwork">
+                        <img src="images/boyart1.jpg" class="gallery-item" alt="Artwork">
+                        <img src="images/girlart2.jpg" class="gallery-item" alt="Artwork">
+                        <img src="images/halloween.jpg" class="gallery-item" alt="Artwork">
+                        <img src="images/helixel.jpg" class="gallery-item" alt="Artwork">
+                        <img src="images/neogirl.jpg" class="gallery-item" alt="Artwork">
+                        <img src="images/newyearboy.jpg" class="gallery-item" alt="Artwork">
+                        <img src="images/newyeargirl.jpg" class="gallery-item" alt="Artwork">
+                        <img src="images/riskydingo.jpg" class="gallery-item" alt="Artwork">
+                        <img src="images/slime.jpg" class="gallery-item" alt="Artwork">
                     </div>
                 </div>
             </div>
@@ -555,22 +628,22 @@
                      <h2 class="section-title">Social Links</h2>
                     <div class="links-grid">
                         <a href="https://www.deviantart.com/racooga" target="_blank" class="social-link" style="border-left: 4px solid #05cc47;">
-                            <img src="SVG/devianart.svg" style="width:24px; margin-right:15px; filter:invert(1);"> DeviantArt
+                            <img src="images/SVG/devianart.svg" style="width:24px; margin-right:15px; filter:invert(1);"> DeviantArt
                         </a>
                         <a href="https://x.com/rAcoogA" target="_blank" class="social-link" style="border-left: 4px solid #fff;">
-                            <img src="SVG/twitter-alt-square.svg" style="width:24px; margin-right:15px; filter:invert(1);"> Twitter / X
+                            <img src="images/SVG/twitter-alt-square.svg" style="width:24px; margin-right:15px; filter:invert(1);"> Twitter / X
                         </a>
                         <a href="https://youtube.com/@racooga" target="_blank" class="social-link" style="border-left: 4px solid #ff0000;">
-                            <img src="SVG/youtube.svg" style="width:24px; margin-right:15px; filter:invert(1);"> YouTube
+                            <img src="images/SVG/youtube.svg" style="width:24px; margin-right:15px; filter:invert(1);"> YouTube
                         </a>
                         <a href="https://t.me/rAcoogAaAa" target="_blank" class="social-link" style="border-left: 4px solid #0088cc;">
-                            <img src="SVG/telegram.svg" style="width:24px; margin-right:15px; filter:invert(1);"> Telegram Channel
+                            <img src="images/SVG/telegram.svg" style="width:24px; margin-right:15px; filter:invert(1);"> Telegram Channel
                         </a>
                     </div>
 
                     <div class="copy-block" onclick="copyDiscord()">
                         <div>
-                            <img src="SVG/discord.svg" style="width:24px; margin-right:15px; filter:invert(1); vertical-align:middle;">
+                            <img src="images/SVG/discord.svg" style="width:24px; margin-right:15px; filter:invert(1); vertical-align:middle;">
                             <span style="font-weight:bold;">racooga</span>
                         </div>
                         <div style="font-size:0.8rem; color:#aaa;">Tap to Copy <span class="copy-feedback" id="discord-feedback">Copied!</span></div>
@@ -638,17 +711,50 @@
            navigateTo('view-menu');
         }
 
+        // --- Carousel Logic (Step & Pause) ---
+        const track = document.getElementById('carouselTrack');
+        if (track) {
+            const images = track.querySelectorAll('img');
+            let index = 0;
+            
+            // Loop through images gently
+            setInterval(() => {
+                index++;
+                if (index > images.length - 1) {
+                    index = 0;
+                }
+                
+                // Assuming images are roughly same width or we just shift by % or px
+                // A safe bet for a varied width gallery carousel is tricky without complex JS.
+                // But let's try purely shifting by one image width? 
+                // We don't know the widths. 
+                // Let's use a simpler "Show 1 big image at a time" approach for this carousel-in-card?
+                // Or just shift by a fixed amount?
+                // Let's assume standard carousel logic: shift container.
+                // Since we want "pause on each", let's verify if images are same width. 
+                // They are NOT. 'width: auto'.
+                
+                // Better approach for varied width: Scroll the container to the next image's offsetLeft.
+                // But track handles transform.
+                
+                // Let's grab the offsetLeft of the target image
+                const targetImg = images[index];
+                const offset = targetImg.offsetLeft;
+                
+                track.style.transform = `translateX(-${offset}px)`;
+                
+            }, 3000); // 3 seconds pause
+        }
+
         // --- Features ---
-        // Copy Discord ID (handles both sidebar and link view)
+        // Copy Discord ID
         function copyDiscord() {
             navigator.clipboard.writeText("racooga").then(() => {
-                // Link view feedback
                 const feedback = document.getElementById('discord-feedback');
                 if(feedback) {
                     feedback.style.opacity = '1';
                     setTimeout(() => { feedback.style.opacity = '0'; }, 2000);
                 }
-                // Sidebar feedback
                 const sidebarFeedback = document.getElementById('discord-feedback-sidebar');
                  if(sidebarFeedback) {
                     sidebarFeedback.style.opacity = '1';
